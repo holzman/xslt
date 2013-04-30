@@ -1,0 +1,1 @@
+      <entry name="CMS_T1_US_FNAL_ce" enabled="True" gatekeeper="cmsosgce.fnal.gov:2119/jobmanager-condor" gridtype="gt2" rsl="(queue=cms)(jobtype=single)" schedd_name="schedd_glideins2@cms-xen43.fnal.gov" verbosity="std" work_dir="Condor">
