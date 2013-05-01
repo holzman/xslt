@@ -1,13 +1,16 @@
 <glidein advertise_delay="5" advertise_with_multiple="True" advertise_with_tcp="True" factory_name="burt-TEST-cms-xen43-FNAL" factory_versioning="False" glidein_name="gfactory_instance" loop_delay="15" restart_attempts="3" restart_interval="1800" schedd_name="schedd_glideins2@cms-xen43.fnal.gov,schedd_glideins3@cms-xen43.fnal.gov,schedd_glideins4@cms-xen43.fnal.gov,schedd_glideins5@cms-xen43.fnal.gov,schedd_glideins6@cms-xen43.fnal.gov,schedd_glideins7@cms-xen43.fnal.gov,schedd_glideins8@cms-xen43.fnal.gov,schedd_glideins9@cms-xen43.fnal.gov" >
    <log_retention>
       <condor_logs max_days="14.0" max_mbytes="100.0" min_days="3.0"/>
-      <job_logs max_days="7.0" max_mbytes="100.0" min_days="2.0"/>
-      <logs max_days="7.0" max_mbytes="100.0" min_days="3.0"/>
+      <job_logs max_days="7.0" max_mbytes="100.0" min_days="3.0"/>
       <summary_logs max_days="31.0" max_mbytes="100.0" min_days="3.0"/>
+      <process_logs>
+         <process_log extension="info" max_days="7.0" max_mbytes="100.0" min_days="3.0" msg_types="INFO"/>
+         <process_log extension="err" max_days="7.0" max_mbytes="100.0" min_days="3.0" msg_types="DEBUG,ERR,WARN"/>
+      </process_logs>
    </log_retention>
    <monitor base_dir="/var/lib/gwms-factory/web-area/monitor" flot_dir="/usr/share/javascriptrrd/flot" javascriptRRD_dir="/usr/share/javascriptrrd/js" jquery_dir="/usr/share/javascriptrrd/flot"/>
    <monitor_footer display_txt="" href_link=""/>
-   <security allow_proxy="frontend" key_length="2048" pub_key="RSA" reuse_oldkey_onstartup_gracetime="900">
+   <security key_length="2048" pub_key="RSA" remove_old_cred_age="30" remove_old_cred_freq="24" reuse_oldkey_onstartup_gracetime="900">
       <frontends>
          <frontend name="OSG_XSEDE" comment="Contact: Mats Rynge rynge@isi.edu" identity="frontendxsede@cms-xen43.fnal.gov">
             <security_classes>
@@ -19,11 +22,6 @@
                <security_class name="cmspilot" username="frontend"/>
             </security_classes>
          </frontend>
-         <frontend name="UCSDOSG-itb" identity="frontend2@cms-xen43.fnal.gov">
-            <security_classes>
-               <security_class name="frontend" username="frontend"/>
-            </security_classes>
-         </frontend>
          <frontend name="hcc-glidein-itb" comment="Contact: Ashu Guru aguru2@unl.edu" identity="blabla@cms-xen43.fnal.gov">
             <security_classes>
                <security_class name="frontend" username="frontend"/>
@@ -31,14 +29,20 @@
          </frontend>
          <frontend name="frontend1" comment="Contact: burt@fnal.gov" identity="frontend1@cms-xen43.fnal.gov">
             <security_classes>
-               <security_class name="frontend" username="frontend"/>
+               <security_class name="frontend-sc" username="frontend"/>
             </security_classes>
          </frontend>
-
+         <frontend name="frontend2" comment="Contact: burt@fnal.gov" identity="frontend2@cms-xen43.fnal.gov">
+            <security_classes>
+               <security_class name="frontend2-sc" username="frontend2"/>
+            </security_classes>
+         </frontend>
       </frontends>
    </security>
+
    <stage base_dir="/var/lib/gwms-factory/web-area/stage" use_symlink="True" web_base_url="http://cms-xen43.fnal.gov:8319/factory/stage"/>
    <submit base_client_log_dir="/var/log/gwms-factory/client" base_client_proxies_dir="/var/lib/gwms-factory/client-proxies" base_dir="/var/lib/gwms-factory/work-dir" base_log_dir="/var/log/gwms-factory/server"/>
+
    <attrs>
       <attr name="CONDOR_ARCH" const="True" glidein_publish="False" job_publish="False" parameter="True" publish="False" type="string" value="default"/>
       <attr name="FactoryType" const="True" glidein_publish="True" job_publish="False" parameter="True" publish="True" type="string" value="itb"/>
@@ -55,41 +59,45 @@
       <attr name="VOS_USING_SE_BASEPATH" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value=""/>
       <attr name="VOS_USING_SE_OTHER_SUBDIR" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value=""/>
       <attr name="VOS_USING_SE_VONAME_LOWERCASE" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value=""/>
-      <attr name="APFMonBaseURL" const="True" glidein_publish="True" job_publish="False" parameter="True" publish="False" type="string" value="http://cms-xen45.fnal.gov:8000/api/jobs"/>
+      <attr name="APFMonBaseURL" const="True" glidein_publish="True" job_publish="False" parameter="True" publish="False" type="string" value="http://cms-xen45.fnal.gov:8000/api"/>
    </attrs>
+
    <entries>
-      <entry name="ATLAS_AU_Australia_agh5" comment="added --Tim 2012-05-09" enabled="True" gatekeeper="agh5.atlas.unimelb.edu.au:8443/cream-pbs-atlas" gridtype="cream" schedd_name="schedd_glideins6@cms-xen43.fnal.gov" verbosity="std" work_dir=".">
+      <entry name="CMS_T1_US_FNAL_ce" enabled="False" auth_method="grid_proxy" trust_domain="CMS" gatekeeper="cmsosgce.fnal.gov:2119/jobmanager-condor" gridtype="gt2" rsl="(queue=cms)(jobtype=single)" schedd_name="schedd_glideins2@cms-xen43.fnal.gov" verbosity="std" work_dir="Condor">
          <config>
-            <max_jobs held="1000" idle="4000" running="10000">
-               <default_max_jobs_frontend held="50" idle="100" running="5000"/>
-               <max_job_frontends held="42" >
-               </max_job_frontends>
-            </max_jobs>
             <release max_per_cycle="20" sleep="0.2"/>
             <remove max_per_cycle="5" sleep="0.2"/>
-            <restrictions require_glidein_glexec_use="False" require_voms_proxy="False"/>
-            <submit cluster_size="10" max_per_cycle="10" sleep="2"/>
+            <submit cluster_size="50" max_per_cycle="50" sleep="2"/>
          </config>
-         <downtimes/>
          <allow_frontends>
          </allow_frontends>
          <attrs>
-            <attr name="GLEXEC_BIN" const="True" glidein_publish="False" job_publish="False" parameter="True" publish="True" type="string" value="NONE"/>
-            <attr name="GLIDEIN_Country" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="AU"/>
-            <attr name="GLIDEIN_Max_Walltime" const="True" glidein_publish="False" job_publish="False" parameter="True" publish="True" type="int" value="171000"/>
-            <attr name="GLIDEIN_ResourceName" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="Australia-ATLAS"/>
-            <attr name="GLIDEIN_Site" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="Australia"/>
-            <attr name="GLIDEIN_Supported_VOs" const="True" glidein_publish="False" job_publish="False" parameter="True" publish="True" type="string" value="ATLAS"/>
+            <attr name="GLEXEC_BIN" const="True" glidein_publish="False" job_publish="False" parameter="True" publish="True" type="string" value="OSG"/>
+            <attr name="GLEXEC_JOB" const="True" glidein_publish="True" job_publish="False" parameter="True" publish="True" type="string" value="True"/>
+            <attr name="GLIDEIN_CMSSite" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="T1_US_FNAL"/>
+            <attr name="GLIDEIN_Country" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="US"/>
+            <attr name="GLIDEIN_Glexec_Use" comment="This has been REQUIRED for historical reasons" const="False" glidein_publish="True" job_publish="False" parameter="True" publish="True" type="string" value="REQUIRED"/>
+            <attr name="GLIDEIN_MaxMemMBs" const="True" glidein_publish="True" job_publish="False" parameter="True" publish="True" type="int" value="3072"/>
+            <attr name="GLIDEIN_Max_Walltime" const="True" glidein_publish="False" job_publish="False" parameter="True" publish="True" type="int" value="118800"/>
+            <attr name="GLIDEIN_Req_MUPJ_gLExec" const="True" glidein_publish="True" job_publish="False" parameter="False" publish="True" type="string" value="True"/>
+            <attr name="GLIDEIN_ResourceName" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="USCMS-FNAL-WC1"/>
+            <attr name="GLIDEIN_SE_BASEPATH" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="srm://cmssrm.fnal.gov:8443/srm/managerv2?SFN=/"/>
+            <attr name="GLIDEIN_SEs" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="cmssrm.fnal.gov"/>
+            <attr name="GLIDEIN_Site" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="FNAL"/>
+            <attr name="GLIDEIN_Supported_VOs" const="True" glidein_publish="False" job_publish="False" parameter="True" publish="True" type="string" value="CMS,CMST1"/>
+            <attr name="Site_Req_Explicit_Auth" const="True" glidein_publish="True" job_publish="False" parameter="False" publish="True" type="string" value="True"/>
+            <attr name="VOS_USING_SE_BASEPATH" const="True" glidein_publish="True" job_publish="True" parameter="True" publish="True" type="string" value="CMS"/>
          </attrs>
          <files>
          </files>
          <infosys_refs>
-            <infosys_ref ref="GlueCEUniqueID=agh5.atlas.unimelb.edu.au:8443/cream-pbs-atlas,Mds-Vo-name=Australia-ATLAS,Mds-Vo-name=local,o=grid" server="exp-bdii.cern.ch" type="BDII"/>
+            <infosys_ref ref="GlueCEUniqueID=cmsosgce.fnal.gov:2119/jobmanager-condor-default,Mds-Vo-name=USCMS-FNAL-WC1,Mds-Vo-name=local,o=grid" server="is.grid.iu.edu" type="BDII"/>
          </infosys_refs>
          <monitorgroups>
          </monitorgroups>
       </entry>
    </entries>
+
    <condor_tarballs>
       <condor_tarball arch="default" os="default" base_dir="/var/lib/gwms-factory/condor-versions/condor-7.8.6" version="default"/>
       <condor_tarball arch="x86_64" os="default" base_dir="/var/lib/gwms-factory/condor-versions/condor-7.8.6" version="default"/>
@@ -97,8 +105,10 @@
       <condor_tarball arch="x86_64" os="rhel6" base_dir="/var/lib/gwms-factory/condor-versions/condor-7.8.6" version="default"/>
       <condor_tarball arch="default" os="deb6" base_dir="/var/lib/gwms-factory/condor-versions/condor-7.8.6" version="default"/>
       <condor_tarball arch="default" os="rhel6" base_dir="/var/lib/gwms-factory/condor-versions/condor-7.8.6" version="default"/>
-
    </condor_tarballs>
    <files>
+      <file absfname="/var/lib/gwms-factory/scripts/foo.tgz" untar="True" comment="comment">
+        <untar_options cond_attr="TRUE" dir="factory-test-dir" absdir_outattr="BNHFACTORY"/>
+      </file>
    </files>
 </glidein>
