@@ -52,12 +52,16 @@
 </default_per_frontend>
 </xsl:template>
 
-<!-- Rename max_job_frontends to per_frontends -->
+<!-- Rename max_job_frontend[s] to per_frontend[s] -->
 <xsl:template match="max_job_frontends">
   <per_frontends>
     <xsl:apply-templates select="@*|node()"/>
   </per_frontends>
 </xsl:template>
-
+<xsl:template match="max_job_frontend">
+  <per_frontend>
+    <xsl:apply-templates select="@*|node()"/>
+  </per_frontend>
+</xsl:template>
 
 </xsl:transform>
